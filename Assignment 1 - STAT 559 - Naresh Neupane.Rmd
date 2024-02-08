@@ -1,0 +1,355 @@
+---
+title: "Assignment 1 - Survival Analysis (STAT 559) "
+author: "Naresh Neupane"
+date: "January 26, 2024"
+output:
+  html_document:
+    df_print: paged
+    toc: no
+     
+  word_document:
+    toc: yes
+  pdf_document:
+    keep_tex: true
+   
+    mainfont: "Computer Modern"
+---
+<style type="text/css">
+
+h1.title {
+  font-size: 38px;
+  color: DarkRed;
+  text-align: center;
+}
+h4.author { /* Header 4 - and the author and data headers use this too  */
+    font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkRed;
+  text-align: center;
+}
+h4.date { /* Header 4 - and the author and data headers use this too  */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkBlue;
+  text-align: center;
+}
+
+body{
+  font-family: Computer Modern;
+  font-size: 12pt;
+}
+
+/* Headers */
+h3,h5,h6{
+  font-size: 24pt;
+}
+
+.math {
+  font-size: small;
+}
+</style>
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+
+The lifetime of light bulbs follows an exponential distribution with a hazard rate of 0.001 failures per hour of use.
+
+(a) Find the mean lifetime of a randomly selected light bulb.
+(b) Find the median lifetime of a randomly selected light bulb.
+(c) What is the probability a light bulb will still function after 2,000 hours of use?
+
+### Solution:
+
+The lifetime of light bulbs follows an exponential distribution with a hazard rate of 0.001 failures per hour of use. Let $T$ denote the lifetime of light bulbs. For an exponential distribution, the cumulative hazard function for the hazard rate of $\lambda = 0.001$ is given by
+
+$$H(t) = \int_{0}^t h(u)du = \int_{0}^t \lambda t|_{0}^t = \lambda t = 0.001 t$$
+And the survival function is given by
+
+$$S(t) = e^{-H(t)} = e^{-\lambda t} = e^{-0.001 t}$$
+The probability density function is given by
+
+$$f(t) = h(t) S(t) = \lambda e^{-\lambda t} = 0.001 e^{-0.001 t}$$
+(a) The mean of the exponential random variable is given by
+
+$$E(T) = \int_{0}^{\infty} S(t) dt = \int_{0}^{\infty} e^{-\lambda t} dt = 1/\lambda = 1/0.001 = 1000$$
+Therefore, the mean lifetime of a randomly selected light bulb is 1,000 hours.
+
+
+
+(b) The median of the exponential random variable satisfies $0.5 = e^{-\lambda t}$ so that is given by
+
+$$t_{med} = \frac{\log(2)}{\lambda} = \frac{\log(2)}{0.001} = 1000 \log(2) = 301.03$$
+That is, the median of a randomly selected light bulb is 301.03 hours.
+
+
+
+(c) The probability a light bulb will still function after 2,000 hours of use is given by the probability density function
+
+$$S(2000) = e^{-0.001 \times 2000} = 0.135$$
+
+$$\\[1in]$$
+
+## Question 2
+
+The log-logistic distribution arises in a similar manner to the log-normal distribution. We say that $T \sim log-logistic(\mu, \sigma)$ if $Y = \ln T ∼ logistic(\mu, \sigma)$, where $\mu$ is the location parameter and $\sigma$ is the scale parameter of the logistic distribution. The probability density function of the logistic distribution is:
+
+$$f(y) = \dfrac{\exp\bigg(\frac{y - \mu}{\sigma}\bigg)}{\sigma \Big[1 + \exp\bigg(\frac{y - \mu}{\sigma}\bigg)\Big]^2}$$
+A commonly used reparametrization is $\alpha = 1/\sigma >0$ and $\lambda = \exp(-\frac{\mu}{\sigma})$.
+
+(a) Derive an expression for the survival function of T using the parametrization in $\alpha$ and $\lambda$.
+(b) Derive an expression for the hazard function of T using the parametrization in $\alpha$ and $\lambda$.
+(c) The time to death (in days) following a kidney transplant follows a log-logistic distribution with $\alpha = 1.5$ and $\lambda = 0.01$.
+
+i. Find the 50, 100, 150 day survival probabilities for kidney transplant patients.
+ii. Find the median time to death following a kidney transplant.
+iii. Show that the hazard rate is initially increasing and then decreasing over time. Find the time at which the hazard rate changes from increasing to decreasing.
+iv. Find the mean time to death. $E(T) = \frac{\pi}{\sin (\pi/\alpha) \alpha \lambda^{1/\alpha}}$
+
+### Solution:
+
+(a) 
+
+
+The reparametrized probability density function for logistic distribution is given as 
+
+$$ f(y) = \dfrac{\exp\bigg(\frac{y - \mu}{\sigma}\bigg)}{\sigma \Big[1 + \exp\bigg(\frac{y - \mu}{\sigma}\bigg)\Big]^2} = \dfrac{\lambda \exp(\alpha y)}{\frac{1}{\alpha} \Big[ 1 + \lambda \exp(\alpha y )\Big]^2} = \dfrac{\alpha \lambda \exp(\alpha y)}{\Big[  1 + \lambda \exp(\alpha y )\Big]^2}$$
+$$Y = \ln T \sim logistic(\alpha, \lambda) \implies T = \exp(Y) \sim log-logistic(\alpha, \lambda)$$
+
+Writing $T$ as a function of $Y$ gives
+
+$$T = g(Y) = \exp(Y) \implies Y = g^{-1}(T) = \ln(T)$$
+Because the derivative of $\exp(Y)$ is always positive and g(Y) is strictly increasing, for the relevant support
+
+
+
+
+$$f_T(t) = f_Y(g^{-1}(t)) \frac{dg^{-1}(t)}{dt} = \frac{\alpha \lambda \exp(\alpha g^{-1}(t))}{\bigg[1 +  \lambda \exp(\alpha g^{-1}(t))\bigg]^2}\cdot \frac{dg^{-1}(t)}{dt} = \frac{\alpha \lambda \exp(\alpha \ln(t))}{\bigg[1 +  \lambda \exp(\alpha \ln(t))\bigg]^2}\cdot \frac{d\ln(t)}{dt}$$
+
+$$f_T(t) = \frac{\alpha \lambda \exp( \ln(t^{\alpha}))}{\bigg[1 + \lambda \exp(\ln(t^{\alpha}))\bigg]^2}\cdot \frac{1}{t} = \frac{\alpha \lambda t^{\alpha-1}}{\bigg[1 + \lambda t^{\alpha}\bigg]^2}$$
+
+The cumulative distribution function (pdf) on support of $y$ could be represented as 
+
+$$ F(t) = P(T \leq t) = \int_{-\infty}^t f(y) dt = \int_{-\infty}^t \frac{\alpha \lambda y^{\alpha-1}}{\bigg[1 + \lambda y^{\alpha}\bigg]^2}dy = \frac{\lambda t^{\alpha}}{1+\lambda t^{\alpha}}$$
+
+Therefore, the survival function is given by 
+$$S(t) = P (T >t) = 1 - F(t) = 1  -\frac{\lambda t^{\alpha}}{1+\lambda t^{\alpha}} = \frac{1}{1+\lambda t^{\alpha}}  $$
+
+
+
+(b) The hazard function of T using the parametrization in $\alpha$ and $\lambda$ is given by
+
+$$h(t) = \frac{f(t)}{S(t)} = \dfrac{\frac{\alpha \lambda t^{\alpha-1}}{\bigg[1 + \lambda t^{\alpha}\bigg]^2}}{\frac{1}{1+\lambda t^{\alpha}}}  = \frac{\alpha \lambda t^{\alpha-1}}{1+\lambda t^{\alpha}}$$
+This form of $h(t)$ could also be derived using the expression $h(t) = -\frac{d}{dt}\ln S(t)$.
+
+(c) The time to death (in days) following a kidney transplant follows a log-logistic distribution
+with $\alpha = 1.5$ and $\lambda = 0.01$.
+
+
+i. 
+```{r}
+kidney_survival = function(t){1/(1+(0.01*t^(1.5)))}
+
+kidney_survival(50)
+kidney_survival(100)
+kidney_survival(150)
+```
+
+
+
+For $t = 50$, $S(t) = 0.2204812$. For $t = 50$, $S(t) = 0.09090909$. For $t = 50$, $S(t) = 0.0516231$.
+
+Therefore, the 50, 100, and 150 day survival probabilities for kidney transplant patients is 22.04%, 9.09%, and 5.16%, respectively.
+
+
+ii. Since the survival probability $S(t) = $, we find the median time by solving
+
+$$0.5 = S(t) \implies \frac{1}{1+0.01 \times t^{1.5}} = 0.5 \implies t = (100)^{1/1.5} = 21.54435$$
+
+iii. With $\lambda =0.01$ and $\alpha =1.5$, the hazard function becomes
+
+$$h(t) = \frac{\alpha \lambda t^{\alpha-1}}{1+\lambda t^{\alpha}} = \frac{0.015t^{0.5}}{1 + 0.01t^{1.5}}$$
+The first derivative of the hazard rate with respect to $t$ gives
+
+$$h'(t) = \dfrac{(1 + 0.01t^{1.5})\cdot 0.0075t^{-0.5} - 0.015t^{0.5} \cdot 0.015 \cdot t^{0.5}}{(1 + 0.01t^{1.5})^2} =\frac{ 0.0075t^{-0.5} + 0.000075t - 0.000225t}{(1 + 0.01t^{1.5})^2} = 0.0075t^{-0.5} + 0.0003t  \implies t = 13.572$$
+The following plot shows that the hazard rate is initially increasing and then decreasing over time.
+
+```{r}
+t=seq(0,100,0.1)
+kidney_survival = function(t){((0.015*t^(0.5))/(1+(0.01*t^(1.5))))}
+plot(t,kidney_survival(t),type='l',ylab="Hazard Rate")
+```
+
+
+
+
+iv. The mean time to death could be obtatined by solving
+
+$$E(T) = \int_{0}^{\infty} t f(t) dt = \int_{0}^{\infty} t \frac{\alpha \lambda t^{\alpha-1}}{\bigg[1 + \lambda t^{\alpha}\bigg]^2}dt = \int_{0}^{\infty}\frac{\alpha \lambda t^{\alpha}}{\bigg[1 + \lambda t^{\alpha}\bigg]^2} dt$$
+
+which solves to
+
+
+$$E(T) =  \frac{\pi}{\sin (\pi/\alpha) \alpha \lambda^{1/\alpha}}$$
+
+```{r}
+#Mean Time to Death
+Mean_time_death = pi/(sin(pi/1.5)*1.5*(0.01)^(1/1.5))
+Mean_time_death
+```
+That is, the mean time to death is 52.10 days.
+
+
+$$\\[1in]$$
+
+
+
+## Question 3
+
+Let $T$ denote the time to failure of an electrical component. The distribution of $T$ is exponential with MEAN $\theta/a$, where $a$ is the temperature at which the component is operated. Suppose that $n$ components are tested independently at KNOWN temperatures $a_1, a_2, \cdots, a_n$, respectively, and their observed lifetimes are $t_1, t_2, \cdots, t_n$. Note that the temperatures $a_1, a_2, \cdots, a_n$ are considered to be constants.
+(a) Derive an expression for the maximum likelihood estimator (MLE) of $\theta$.
+(b) Derive an expression for an estimate of the asymptotic variance of the MLE.
+
+
+### Solution:
+
+(a) The density function for the exponential distribution is given by
+
+$$abc $$
+
+
+The likelihood function is given by
+
+$$\mathcal{L} = \prod_{i = 1}^n f(t) = \prod_{i = 1}^n \frac{a}{\theta} \exp(-at_i/\theta) = \bigg( \frac{a}{\theta}\bigg)^n \exp\big(-a/\theta\sum_{i=1}^n t_i\big)$$
+And the log-likelihood is given by
+
+$$\ell = \log(\mathcal{L}) = \log \bigg[ \prod_{i = 1}^n f(t) \bigg] = n \cdot \ln\bigg(\frac{a}{\theta} \bigg) - \frac{a}{\theta} \sum_{i=1}^n t_i$$
+Taking the derivative of $\ell$ with respect to $ \theta$ gives
+
+$$\frac{\partial \ell }{\partial \theta} = n \frac{\theta}{a} \bigg( -\frac{a}{\theta^2} \bigg) \quad - \quad  \sum_{i=1}^n t_i \bigg( -\frac{a}{\theta^2} \bigg)$$
+Solving for optimality gives
+
+$$ \hat{\theta}_{MLE} = a\frac{\sum_{i=1}^n t_i}{n} = a \bar{t}  $$
+
+
+
+(b) Given that $T \sim \exp(mean(\frac{\theta}{a}))$, the expected value and variance are given by
+
+$$ E(t) = \frac{\theta}{a} \quad and \quad V(t) = \frac{\theta^2}{a^2}$$
+Also,
+$$ E(\hat{\theta}_{MLE}) = \frac{a}{n}\times n \times \frac{\theta}{a} = \theta$$
+$$E(\hat{\theta}_{MLE}^2) = E(a^2 \bar{t}^2) = a^2 E(\bar{t}^2) =  a^2 \bigg( V(\bar{t}) + E(\bar{t})^2\bigg) = a^2 \bigg( \dfrac{n\frac{\theta^2}{a^2}}{n^2} + (\frac{\theta}{a})^2\bigg) = \theta^2\frac{n+1}{n}$$
+
+The expression for an estimate of the asymptotic variance of the MLE is given by
+
+$$Var(\hat{\theta}_{MLE}) =  - E(\hat{\theta}_{MLE}^2) - E(\hat{\theta}_{MLE})^2  =\theta^2\frac{n+1}{n} - \theta^2 =  \frac{\theta^2}{n}$$
+
+Asymptotically, as $n \rightarrow \infty$, then the variance converges to 0.
+
+
+$$\\[1in]$$
+
+
+## Question 4
+
+Exercise 2.5 on page 24 of the text, Applied Survival Analysis Using R.
+Consider a survival distribution with constant hazard $\lambda = 0.07$from $t = 0$ until $t=5$ and then hazard $\lambda = 0.14$from $t = 0$ for $t>5$ (This is known as a piecewise constant hazard.) Plot this hazard function and the corresponding survival function for $0 < t < 10$.What is the median survival time?
+
+
+### Solution:
+
+
+The survival function is given by $S(t) = \exp(-\int_0^t h(u) du$. That is, for $0 \geq t \geq 5$, $S(t) = e^{-0.07t}$. For $5 < t <10$, $S(t) = e^{-\int_0^5 0.07 du - \int_5^t 0.14 du} = e^{0.35 - 0.14(t-5)}$. 
+
+
+```{r}
+
+ht <- function(t){
+    f <- NULL
+    f[t>=0 & t<=5] <- 0.07
+    f[t>5 ] <- 0.14
+    f
+}
+
+t <- seq(0, 20, 0.1)
+plot(t, ht(t), type="l", las=1, ylim=c(0,0.20), ylab="Hazard Rate", main="Plot of Hazard Function")
+```
+
+```{r}
+# Define Hazard and Survival Function
+hazard_function = function(t){
+ ifelse(t <= 5, 0.07, 0.14)}
+h_value = sapply(t,hazard_function)
+S <- exp(-cumsum(h_value*0.001))
+# Suvival funciton graph
+plot(t,S,type="l",xlab="t",ylab="S(t)",main="Plot of the Survival Function")
+```
+$$\\[1in]$$
+
+
+## Question 5
+
+A model for lifetimes, with a bathtub-shaped hazard rate, is the distribution with survival function 
+$$S(t) = \exp \{1 − \exp [(\lambda t)^\alpha]\} , \alpha, \lambda > 0, t > 0.$$
+
+(a) If $\alpha =0.5$, show that the hazard rate has a bathtub shape and find the time at which
+the hazard rate changes from decreasing to increasing.
+(b) If $\alpha = 2$, show that the hazard rate of $t$ is monotone increasing.
+
+### Solution:
+
+(a) With survival function given by
+$$S(t) = \exp \{1 − \exp [(\lambda t)^\alpha]\} , \alpha, \lambda > 0, t > 0.$$
+The cumulative distirbution function is given by
+
+$$F(t) = 1- S(t) = 1 -  \exp \{1 − \exp [(\lambda t)^\alpha]\} $$
+The probability density function is given by
+
+$$f(t)= \frac{dF(t)}{dt} = -\exp \{1 − \exp [(\lambda t)^\alpha]\}  \cdot − \exp [(\lambda t)^\alpha] \cdot \alpha (\lambda t)^{\alpha - 1} \lambda = \alpha \lambda (\lambda t)^{\alpha - 1}\cdot \exp [(\lambda t)^\alpha] \cdot \exp \{1 − \exp [(\lambda t)^\alpha]\}$$
+Therefore, the hazard rate is given by
+
+$$h(t) = \frac{f(t)}{S(t)} = \alpha \lambda (\lambda t)^{\alpha - 1}\cdot \exp [(\lambda t)^\alpha]$$
+If $\alpha = 0.5$, then the hazard rate is
+
+$$h(t) = 0.5 \lambda (\lambda t)^{-0.5}\cdot \exp [(\lambda t)^{0.5}]$$
+
+
+Assume $\lambda = 1$, then the plot appears as below:
+
+```{r}
+t=seq(0,4,0.1)
+y=0.5*1*(1*t)^(0.5-1)*exp((1*t)^(0.5))
+plot(t,y, main="Plot for alpha = 0.5 and lambda = 1", type='l')
+```
+
+Assume $\lambda = 2$, then the plot appears as below:
+
+```{r}
+t=seq(0,4,0.1)
+y=0.5*2*(2*t)^(0.5-1)*exp((2*t)^(0.5))
+plot(t,y, main="Plot for alpha = 0.5 and lambda = 2", type='l')
+```
+$$h'(t) = \frac{d h(t)}{dt} = \frac{d }{dt}\bigg( \alpha \lambda (\lambda t)^{\alpha - 1}\cdot \exp [(\lambda t)^\alpha]\bigg)=\frac{d }{dt}\bigg( \alpha \lambda^{\alpha} (t)^{\alpha - 1}\cdot \exp [(\lambda t)^\alpha]\bigg)\\
+=\alpha \lambda^{\alpha}\bigg( (t)^{\alpha - 1}\cdot \frac{d }{dt}\exp [(\lambda t)^\alpha]+\exp [(\lambda t)^\alpha]\frac{dt }{dt}\bigg)\\
+=\alpha \lambda^{\alpha}\bigg( (t)^{\alpha - 1}\cdot \exp [(\lambda t)^\alpha]\cdot \alpha(\lambda t)^{\alpha -1} \cdot \lambda+\exp [(\lambda t)^\alpha]\bigg)\\
+=\alpha \lambda^{\alpha}\exp [(\lambda t)^\alpha]\bigg( \alpha \lambda^{\alpha}(t)^{2(\alpha - 1)} +1\bigg)$$
+
+Solving $h'(t) = 0$ gives the time at which the hazard rate changes from decreasing to increasing
+
+$$t = \bigg(-\frac{1}{2\lambda^{\alpha}}\bigg)^{\frac{1}{2(\alpha-1)}}$$
+
+
+
+
+(b) If $\alpha = 2$, the first derivative of the hazard function changes to
+
+
+$$2 \lambda^{2}\exp [(\lambda t)^2]\bigg( 2 \lambda^{2}(t)^{2} +1\bigg) $$
+
+Since $\lambda >0$ and any positive $t$, $t >0$,implies that this function is essentially a constant and two increasing functions multiplied together, which implies that it is strictly positive. That is, the hazard function is strictly increasing, or monotone increasing. 
+
+
